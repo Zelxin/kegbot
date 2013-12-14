@@ -35,6 +35,11 @@ VIEW_HEIGHT = 688
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 pygame.display.set_caption('')
+windowSurface = pygame.display.set_mode((600,400), FULLSCREEN,32)
+windowInfo = pygame.display.Info()
+FONTSIZE = 48
+LINEHEIGHT = 28
+basicFont = pygame.font.SysFont(None, FONTSIZE)
 
 #set up flow meteru k 
 fm = FlowMeter('metric')
@@ -49,6 +54,24 @@ def doAClick(channel):
 
 GPIO.add_event_detect(4, GPIO.RISING, callback=doAClick, bouncetime=20)
 
+def render():
+  windowSurface.fill(BLACK)
+  
+  text = basicFont.render('Amount Poured(L)' + fm.totalPour, True, WHITE, BLACK)
+  textRect = text.get_rect()
+  windowSurface.blit(text, (40,6*LINEHEIGHT))
+  
+  text = basicFont.render('Pouring' + fm.Pouring , True, WHITE, BLACK)
+  textRect = text.get_rect()
+  windowSurface.blit(text, (40,7*LINEHEIGHT))
+  
+  text = basicFont.render('Temperature: ' + tc.temperature, True, WHITE, BLACK)
+  textRect= text.get_Rect()
+  windowSurface.blit(text, (40,8*LINEHEIGHT))
+  
+  #Display everything
+  pygame.display.flip()
+  
 
 # Operate the fridge based off the temp read
 def FridgeControl(tc):
@@ -76,11 +99,15 @@ def WriteSpreadSheet(tc):
 		worksheet.append_row(values)
 	except Exception:
 		print ("Failed to connect to Google Spreadsheet")
-
+def ReadTemp(tc):
+  tc.read_dht22
 periodic(scheduler,3600,WriteSpreadSheet,tc) #set writespreadsheet to run every 3600 seconds(1 hour)
+periodic(scheduler,30,ReadTemp,tc)
 
 while True:
-	tc.read_dht22()
 	if  ( tc.temperature > -254):
 		FridgeControl(tc)
-	time.sleep(20)
+	for event in pygame.event.get():
+	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+	    pygame.quit()
+	    sys.exit()

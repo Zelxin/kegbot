@@ -26,13 +26,15 @@ GPIO.setup(FLOWSENSOR_PIN,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FRIDGE_PIN, GPIO.OUT)
 GPIO.output(FRIDGE_PIN, GPIO.LOW)
 
-#set up pygame
-#pygame.init()
+# ===========================================================================
+# Define Pin setup
+# ===========================================================================
+pygame.init()
 VIEW_WIDTH = 1248
 VIEW_HEIGHT = 688
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-#pygame.display.set_caption('')
+pygame.display.set_caption('')
 
 #set up flow meteru k 
 fm = FlowMeter('metric')
