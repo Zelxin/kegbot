@@ -24,8 +24,8 @@ FRIDGEPOWER_PIN = 23
 boardRevision = GPIO.RPI_REVISION
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(FLOWSENSOR_PIN,GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(FRIDGE_PIN, GPIO.OUT)
-GPIO.output(FRIDGE_PIN, GPIO.LOW)
+GPIO.setup(FRIDGEPOWER_PIN, GPIO.OUT)
+GPIO.output(FRIDGEPOWER_PIN, GPIO.LOW)
 
 # ===========================================================================
 # Define Pin setup
@@ -109,8 +109,8 @@ def WriteSpreadSheet(tc):
 def ReadTemp(tc):
   tc.read_dht22
   
-periodic(scheduler,3600,WriteSpreadSheet,tc) #set writespreadsheet to run every 3600 seconds(1 hour)
-periodic(scheduler,30,ReadTemp,tc)
+periodic(scheduler,3600,WriteSpreadSheet,(tc,)) #set writespreadsheet to run every 3600 seconds(1 hour)
+periodic(scheduler,30,ReadTemp,(tc,))
 
 while True:
 	if  ( tc.temperature > -254):
@@ -119,3 +119,4 @@ while True:
 	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
 	    pygame.quit()
 	    sys.exit()
+	render()

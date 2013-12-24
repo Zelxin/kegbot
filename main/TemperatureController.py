@@ -27,3 +27,8 @@ class TemperatureController():
 		if(matches):
 			self.humidity = float(matches.group(1))
 		return [self.temperature,self.humidity]
+
+	def GetFormatedTemperature(self)
+		return str(round(self.temperature,2))
+	def GetFormatedHumidity(self)
+		return str(self.humidity)
