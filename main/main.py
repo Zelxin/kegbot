@@ -1,12 +1,13 @@
 #!/usr/bin/python
 import os
-import time 
+import sched, time 
 import math
 import pygame, sys
 from pygame.locals import *
 import RPi.GPIO as GPIO
 from flowmeter import *
 from TemperatureController import *
+
 # ===========================================================================
 # Define Scheduler
 # ===========================================================================
