@@ -37,7 +37,7 @@ VIEW_HEIGHT = 688
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 pygame.display.set_caption('')
-windowSurface = pygame.display.set_mode((600,400), FULLSCREEN,32)
+windowSurface = pygame.display.set_mode([600,400])
 windowInfo = pygame.display.Info()
 FONTSIZE = 48
 LINEHEIGHT = 28
@@ -60,7 +60,7 @@ def render():
   windowSurface.fill(BLACK)
   
   text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature(), True, WHITE, BLACK)
-  textRect= text.get_Rect()
+  textRect= text.get_rect()
   windowSurface.blit(text, (40,6*LINEHEIGHT))
   
   text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour(), True, WHITE, BLACK)
@@ -115,7 +115,7 @@ while True:
 		FridgeControl(tc)
 	for event in pygame.event.get():
 	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-		GPIO.cleanup()
 	    pygame.quit()
+	    GPIO.cleanup()
 	    sys.exit()
 	render()
