@@ -4,10 +4,11 @@ import time
 import re
 import subprocess
 
-class TemperatureController:
+class TemperatureController():
   SENSOR_PIN = -999
   temperature = -999
   humidity = -999
+  
   def __init__(self, pin):
     self.SENSOR_PIN = pin
     
