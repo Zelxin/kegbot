@@ -28,8 +28,8 @@ class TemperatureController():
 			self.humidity = float(matches.group(1))
 		return [self.temperature,self.humidity]
 
-	def GetFormattedTemperature(self)
+	def GetFormattedTemperature(self):
 		return str(round(self.temperature,2))
 		
-	def GetFormattedHumidity(self)
+	def GetFormattedHumidity(self):
 		return str(self.humidity)

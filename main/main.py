@@ -58,19 +58,16 @@ GPIO.add_event_detect(4, GPIO.RISING, callback=doAClick, bouncetime=20)
 def render():
   windowSurface.fill(BLACK)
   
-  text = basicFont.render('Temperature: ' + tc.temperature, True, WHITE, BLACK)
+  text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature, True, WHITE, BLACK)
   textRect= text.get_Rect()
   windowSurface.blit(text, (40,6*LINEHEIGHT))
   
-  text = basicFont.render('Amount Poured(L)' + fm.totalPour, True, WHITE, BLACK)
+  text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour, True, WHITE, BLACK)
   textRect = text.get_rect()
   windowSurface.blit(text, (40,7*LINEHEIGHT))
   
-  text = basicFont.render('Pouring' + fm.Pouring , True, WHITE, BLACK)
-  textRect = text.get_rect()
-  windowSurface.blit(text, (40,8*LINEHEIGHT))
   
-  text = basicFont.render('Current Pour' + fm.Pouring , True, WHITE, BLACK)
+  text = basicFont.render('Current Pour' + fm.getFormattedThisPour , True, WHITE, BLACK)
   textRect = text.get_rect()
   windowSurface.blit(text, (40,8*LINEHEIGHT))
   
