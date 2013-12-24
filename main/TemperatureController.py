@@ -12,10 +12,10 @@ class TemperatureController():
 	def __init__(self, pin):
 		self.SENSOR_PIN = pin
     
-  '''
-  pin - Pin to send signal to
-  Returns [Temperature(C), Humidity(%)
-  '''
+	'''
+	pin - Pin to send signal to
+	Returns [Temperature(C), Humidity(%)
+	'''
 	def read_dht22(self):
 		output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)]
 		#regex magic
