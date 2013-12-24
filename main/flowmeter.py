@@ -38,6 +38,14 @@ class FlowMeter():
     # Update the last click
     self.lastClick = currentTime
 
+	def reset(self):
+		self.clicks = 0
+		self.lastClick=0
+		self.hertz = 0.0
+		self.flow = 0
+		self.thisPour = 0
+		self.totalPour = 0
+		
   def getFormattedClickDelta(self):
      return str(self.clickDelta) + ' ms'
   

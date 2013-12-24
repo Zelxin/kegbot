@@ -62,7 +62,7 @@ def WriteSpreadSheet(temperature, humidity):
 def read_dht22( pin ):
 	temp = -999.9
 	hum = -999.9
-	output = subprocess.check_output(["./Adafruit_DHT", "22", str(pin)])
+	output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)]
 	
 	matches = re.search("Temp =\s+(.[0-9.]+)", output)	
 	print(output)
