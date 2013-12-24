@@ -17,7 +17,7 @@ class TemperatureController():
 	Returns [Temperature(C), Humidity(%)
 	'''
 	def read_dht22(self):
-		output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)]
+		output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)])
 		#regex magic
 		matches = re.search("Temp =\s+(.[0-9.]+)", output)	
 		if(matches):
@@ -28,7 +28,8 @@ class TemperatureController():
 			self.humidity = float(matches.group(1))
 		return [self.temperature,self.humidity]
 
-	def GetFormatedTemperature(self)
+	def GetFormattedTemperature(self)
 		return str(round(self.temperature,2))
-	def GetFormatedHumidity(self)
+		
+	def GetFormattedHumidity(self)
 		return str(self.humidity)
