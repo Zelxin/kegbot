@@ -22,6 +22,7 @@ FLOWSENSOR_PIN = 4
 TEMPERATURESENSOR_PIN = 22
 FRIDGEPOWER_PIN = 23
 boardRevision = GPIO.RPI_REVISION
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(FLOWSENSOR_PIN,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FRIDGEPOWER_PIN, GPIO.OUT)
@@ -58,16 +59,16 @@ GPIO.add_event_detect(4, GPIO.RISING, callback=doAClick, bouncetime=20)
 def render():
   windowSurface.fill(BLACK)
   
-  text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature, True, WHITE, BLACK)
+  text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature(), True, WHITE, BLACK)
   textRect= text.get_Rect()
   windowSurface.blit(text, (40,6*LINEHEIGHT))
   
-  text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour, True, WHITE, BLACK)
+  text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour(), True, WHITE, BLACK)
   textRect = text.get_rect()
   windowSurface.blit(text, (40,7*LINEHEIGHT))
   
   
-  text = basicFont.render('Current Pour' + fm.getFormattedThisPour , True, WHITE, BLACK)
+  text = basicFont.render('Current Pour' + fm.getFormattedThisPour() , True, WHITE, BLACK)
   textRect = text.get_rect()
   windowSurface.blit(text, (40,8*LINEHEIGHT))
   
@@ -114,6 +115,7 @@ while True:
 		FridgeControl(tc)
 	for event in pygame.event.get():
 	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+		GPIO.cleanup()
 	    pygame.quit()
 	    sys.exit()
 	render()

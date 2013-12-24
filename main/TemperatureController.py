@@ -18,6 +18,7 @@ class TemperatureController():
 	'''
 	def read_dht22(self):
 		output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)])
+		print(output)
 		#regex magic
 		matches = re.search("Temp =\s+(.[0-9.]+)", output)	
 		if(matches):
