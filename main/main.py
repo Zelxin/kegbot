@@ -7,14 +7,8 @@ from pygame.locals import *
 import RPi.GPIO as GPIO
 from flowmeter import *
 from TemperatureController import *
+import threading
 
-# ===========================================================================
-# Define Scheduler
-# ===========================================================================
-scheduler = sched.scheduler(time.time, time.sleep)
-def periodic(scheduler, interval, action,actionargs=()):
-  scheduler.enter(interval,1, periodic, (scheduler,interval,action,actionargs))
-  action(*actionargs)
 # ===========================================================================
 # Define Pin setup
 # ===========================================================================
@@ -47,6 +41,8 @@ basicFont = pygame.font.SysFont(None, FONTSIZE)
 fm = FlowMeter('metric')
 #set up temperature controller
 tc = TemperatureController(22)
+
+bRun = True
 
 #This gets run whenever an interrupt triggers it due to pin 4 being grounded.
 def doAClick(channel):
@@ -90,25 +86,36 @@ def FridgeControl(tc):
 		bFridgeOn = False
 
 
-def WriteSpreadSheet(tc):
-	try:
-		gc = gspread.Client(auth=(email,password))
-		gc.login()
-		# Open a worksheet from your spreadsheet using the filename
-		sht = gc.open(spreadsheet)
-		# Get first sheet
-		worksheet = sht.get_worksheet(0)
-		# Create and insert values
-		values = [datetime.datetime.now(), tc.temperature, tc.humidity,bFridgeOn]
-		worksheet.append_row(values)
-	except Exception:
-		print ("Failed to connect to Google Spreadsheet")
+def WriteSpreadSheet(tc,sleepTime):
+	while (bRun):
+		try:
+			gc = gspread.Client(auth=(email,password))
+			gc.login()
+			# Open a worksheet from your spreadsheet using the filename
+			sht = gc.open(spreadsheet)
+			# Get first sheet
+			worksheet = sht.get_worksheet(0)
+			# Create and insert values
+			values = [datetime.datetime.now(), tc.temperature, tc.humidity,bFridgeOn]
+			worksheet.append_row(values)
+		except Exception:
+			print ("Failed to connect to Google Spreadsheet")
+		time.sleep(sleepTime)
 		
-def ReadTemp(tc):
-  tc.read_dht22
-  
-periodic(scheduler,3600,WriteSpreadSheet,(tc,)) #set writespreadsheet to run every 3600 seconds(1 hour)
-periodic(scheduler,30,ReadTemp,(tc,))
+def ReadTemp(tc,sleepTime):
+	print('Sleeping TemperatureThread')
+	while (bRun):
+		tc.read_dht22()
+		print('Sleeping TemperatureThread')
+		time.sleep(sleepTime)
+
+tTemp = threading.Timer(2,ReadTemp,(tc,15))
+tTemp.start()
+tSS = threading.Timer(2,WriteSpreadSheet,(tc,3600))
+tSS.start()
+#periodic(scheduler,30,ReadTemp,(tc,))
+#periodic(scheduler,3600,WriteSpreadSheet,(tc,)) #set writespreadsheet to run every 3600 seconds(1 hour)
+
 
 while True:
 	if  ( tc.temperature > -254):
@@ -116,6 +123,7 @@ while True:
 	for event in pygame.event.get():
 	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
 	    pygame.quit()
+	    bRun = False
 	    GPIO.cleanup()
 	    sys.exit()
 	render()
