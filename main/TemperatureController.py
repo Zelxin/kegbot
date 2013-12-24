@@ -17,7 +17,7 @@ class TemperatureController():
   Returns [Temperature(C), Humidity(%)
   '''
   def read_dht22(self):
-    output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)];
+    output = subprocess.check_output(["sudo","./Adafruit_DHT", "22", str(SENSOR_PIN)]
     #regex magic
     matches = re.search("Temp =\s+([0-9.]+", output)
     if(matches):
