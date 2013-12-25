@@ -41,7 +41,7 @@ basicFont = pygame.font.SysFont(None, FONTSIZE)
 fm = FlowMeter('metric')
 #set up temperature controller
 tc = TemperatureController(22)
-
+bRun = False
 #This gets run whenever an interrupt triggers it due to pin 4 being grounded.
 def doAClick(channel):
   currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
@@ -81,40 +81,25 @@ def FridgeControl(tc):
 		#Turn fridge off
 		GPIO.output(FRIDGE_PIN, GPIO.LOW)
 		bFridgeOn = False
-
-
-def WriteSpreadSheet(tc,sleepTime):
-	while (bRun):
-		try:
-			gc = gspread.Client(auth=(email,password))
-			gc.login()
-			# Open a worksheet from your spreadsheet using the filename
-			sht = gc.open(spreadsheet)
-			# Get first sheet
-			worksheet = sht.get_worksheet(0)
-			# Create and insert values
-			values = [datetime.datetime.now(), tc.temperature, tc.humidity,bFridgeOn]
-			worksheet.append_row(values)
-		except Exception:
-			print ("Failed to connect to Google Spreadsheet")
-		time.sleep(sleepTime)
 		
 def ReadTemp(tc):
-		tc.read_dht22()
-
+    while bRun:
+        tc.read_dht22()
+    time.sleep(5)
+    
+tTemp = threading.Thread(target=ReadTemp, args=(tc,15))
+tTemp.start()
 while True:
 	if  ( tc.temperature > -254):
 		FridgeControl(tc)
 	for event in pygame.event.get():
 	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
 	    pygame.quit()
-      #Cleanup threads
-	    bRun = False
-      tTemp.stop()
-      #Cleanup GPIO
+        tTemp.stop()
+        #Cleanup GPIO
 	    GPIO.cleanup()
 	    sys.exit()
-      
+   
   currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
   if(fm.thisPour > 0.23 and currentTime - fm.lastClick > 10000):
     fm.thisPour = 0.0
