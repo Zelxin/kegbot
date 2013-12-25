@@ -44,30 +44,30 @@ tc = TemperatureController(22)
 bRun = False
 #This gets run whenever an interrupt triggers it due to pin 4 being grounded.
 def doAClick(channel):
-  currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
-  fm.update(currentTime)
-  print(fm.totalPour)
+    currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
+    fm.update(currentTime)
+    print(fm.totalPour)
 
 GPIO.add_event_detect(4, GPIO.RISING, callback=doAClick, bouncetime=20)
 
 def render():
-  windowSurface.fill(BLACK)
+    windowSurface.fill(BLACK)
+
+    text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature(), True, WHITE, BLACK)
+    textRect= text.get_rect()
+    windowSurface.blit(text, (40,6*LINEHEIGHT))
   
-  text = basicFont.render('Temperature: ' + tc.GetFormattedTemperature(), True, WHITE, BLACK)
-  textRect= text.get_rect()
-  windowSurface.blit(text, (40,6*LINEHEIGHT))
-  
-  text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour(), True, WHITE, BLACK)
-  textRect = text.get_rect()
-  windowSurface.blit(text, (40,7*LINEHEIGHT))
+    text = basicFont.render('Amount Poured(L)' + fm.getFormattedTotalPour(), True, WHITE, BLACK)
+    textRect = text.get_rect()
+    windowSurface.blit(text, (40,7*LINEHEIGHT))
   
   
-  text = basicFont.render('Current Pour' + fm.getFormattedThisPour() , True, WHITE, BLACK)
-  textRect = text.get_rect()
-  windowSurface.blit(text, (40,8*LINEHEIGHT))
+    text = basicFont.render('Current Pour' + fm.getFormattedThisPour() , True, WHITE, BLACK)
+    textRect = text.get_rect()
+    windowSurface.blit(text, (40,8*LINEHEIGHT))
   
-  #Display everything
-  pygame.display.flip()
+    #Display everything
+    pygame.display.flip()
   
 
 # Operate the fridge based off the temp read
@@ -91,7 +91,7 @@ tTemp = threading.Thread(target=ReadTemp, args=(tc,15))
 tTemp.start()
 while True:
 	if  ( tc.temperature > -254):
-		FridgeControl(tc)
+        FridgeControl(tc)
 	for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
             pygame.quit()
@@ -100,7 +100,7 @@ while True:
             GPIO.cleanup()
             sys.exit()
    
-  currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
-  if(fm.thisPour > 0.23 and currentTime - fm.lastClick > 10000):
-    fm.thisPour = 0.0
+    currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
+    if(fm.thisPour > 0.23 and currentTime - fm.lastClick > 10000):
+        fm.thisPour = 0.0
 	render()
