@@ -24,11 +24,13 @@ class FlowMeter():
     self.hertz = 0.0
     self.flow = 0.0
     #open file
-    file = open(self.filename, 'r')
-    self.thisPour = float(file.readline())
-    file.close()
+    try:
+		with open(self.filename) as f:
+			self.totalPour = float(f.readline())
+	except IOError:
+		self.totalPour = 0.0
     
-    self.totalPour = 0.0
+    self.thisPour = 0.0
 
   def update(self, currentTime):
     self.clicks += 1
