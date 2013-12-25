@@ -89,10 +89,11 @@ def ReadTemp(tc):
     
 tTemp = threading.Thread(target=ReadTemp, args=(tc,15))
 tTemp.start()
+
 while True:
-	if  ( tc.temperature > -254):
+	if ( tc.temperature > -254):
         FridgeControl(tc)
-	for event in pygame.event.get():
+    for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
             pygame.quit()
             tTemp.stop()
