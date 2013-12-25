@@ -1,4 +1,5 @@
 import time
+from __future__ import print_function
 
 class FlowMeter():
   PINTS_IN_A_LITER = 2.11338
@@ -13,7 +14,7 @@ class FlowMeter():
   flow = 0 # in Liters per second
   thisPour = 0.0 # in Liters
   totalPour = 0.0 # in Liters
-
+  filename = "totalpour.dat"
   def __init__(self, displayFormat):
     self.displayFormat = displayFormat
     self.clicks = 0
@@ -21,7 +22,11 @@ class FlowMeter():
     self.clickDelta = 0
     self.hertz = 0.0
     self.flow = 0.0
-    self.thisPour = 0.0
+    #open file
+    file = open(self.filename, 'r')
+    self.thisPour = float(file.readline())
+    file.close()
+    
     self.totalPour = 0.0
 
   def update(self, currentTime):
@@ -37,7 +42,12 @@ class FlowMeter():
       self.totalPour += instPour
     # Update the last click
     self.lastClick = currentTime
+    file = open(self.filename, 'w')
+    file.write(self.totalPour)
+    file.close()
 
+  
+  
   def reset(self):
 	self.clicks = 0
 	self.lastClick=0

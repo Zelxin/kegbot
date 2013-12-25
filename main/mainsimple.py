@@ -42,8 +42,6 @@ fm = FlowMeter('metric')
 #set up temperature controller
 tc = TemperatureController(22)
 
-bRun = True
-
 #This gets run whenever an interrupt triggers it due to pin 4 being grounded.
 def doAClick(channel):
   currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
@@ -67,7 +65,6 @@ def render():
   text = basicFont.render('Current Pour' + fm.getFormattedThisPour() , True, WHITE, BLACK)
   textRect = text.get_rect()
   windowSurface.blit(text, (40,8*LINEHEIGHT))
-  
   
   #Display everything
   pygame.display.flip()
@@ -102,24 +99,8 @@ def WriteSpreadSheet(tc,sleepTime):
 			print ("Failed to connect to Google Spreadsheet")
 		time.sleep(sleepTime)
 		
-def ReadTemp(tc,sleepTime):
-	print('Sleeping TemperatureThread')
-	while (bRun):
+def ReadTemp(tc):
 		tc.read_dht22()
-		print('Sleeping TemperatureThread')
-		time.sleep(sleepTime)
-
-tTemp = threading.Thread(target=ReadTemp, args=(tc,15))
-tSS = threading.Thread(target=WriteSpreadSheet, args=(tc,3600))
-tTemp.start()
-tSS.start()
-#tTemp = threading.Timer(2,ReadTemp,(tc,15))
-#tTemp.start()
-#tSS = threading.Timer(2,WriteSpreadSheet,(tc,3600))
-#tSS.start()
-#periodic(scheduler,30,ReadTemp,(tc,))
-#periodic(scheduler,3600,WriteSpreadSheet,(tc,)) #set writespreadsheet to run every 3600 seconds(1 hour)
-
 
 while True:
 	if  ( tc.temperature > -254):
@@ -130,7 +111,6 @@ while True:
       #Cleanup threads
 	    bRun = False
       tTemp.stop()
-      tSS.stop()
       #Cleanup GPIO
 	    GPIO.cleanup()
 	    sys.exit()
