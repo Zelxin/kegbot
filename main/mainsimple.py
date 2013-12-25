@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import os
-import sched, time 
+import time 
 import math
 import pygame, sys
 from pygame.locals import *
@@ -91,7 +91,7 @@ tTemp = threading.Thread(target=ReadTemp, args=(tc,15))
 tTemp.start()
 
 while True:
-	if ( tc.temperature > -254):
+	if (tc.temperature > -254):
         FridgeControl(tc)
     for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -102,6 +102,7 @@ while True:
             sys.exit()
    
     currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
+    
     if(fm.thisPour > 0.23 and currentTime - fm.lastClick > 10000):
         fm.thisPour = 0.0
 	render()
