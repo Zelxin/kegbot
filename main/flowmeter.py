@@ -1,5 +1,6 @@
-import time
 from __future__ import print_function
+import time
+
 
 class FlowMeter():
   PINTS_IN_A_LITER = 2.11338
