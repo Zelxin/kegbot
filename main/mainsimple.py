@@ -93,12 +93,12 @@ while True:
 	if  ( tc.temperature > -254):
 		FridgeControl(tc)
 	for event in pygame.event.get():
-	  if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-	    pygame.quit()
-        tTemp.stop()
-        #Cleanup GPIO
-	    GPIO.cleanup()
-	    sys.exit()
+        if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+            pygame.quit()
+            tTemp.stop()
+            #Cleanup GPIO
+            GPIO.cleanup()
+            sys.exit()
    
   currentTime = int(time.time() * FlowMeter.MS_IN_A_SECOND)
   if(fm.thisPour > 0.23 and currentTime - fm.lastClick > 10000):
