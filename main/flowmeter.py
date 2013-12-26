@@ -27,7 +27,7 @@ class FlowMeter():
     try:
 		with open(self.filename) as f:
 			self.totalPour = float(f.readline())
-	except IOError:
+	except Exception:
 		self.totalPour = 0.0
     
     self.thisPour = 0.0
